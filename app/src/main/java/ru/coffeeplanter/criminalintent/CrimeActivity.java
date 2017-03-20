@@ -1,28 +1,25 @@
 package ru.coffeeplanter.criminalintent;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 
-public class CrimeActivity extends FragmentActivity {
+import java.util.UUID;
+
+public class CrimeActivity extends SingleFragmentActivity {
+
+    private static final String EXTRA_CRIME_ID = "ru.coffeeplanter.criminalintent.crime_id";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected Fragment createFragment() {
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
+        return CrimeFragment.newInstance(crimeId);
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-
-        if (fragment == null) {
-            fragment = new CrimeFragment();
-            fm.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
-                    .commit();
-        }
-
+    public static Intent newIntent(Context packageContext, UUID crimeId) {
+        Intent intent = new Intent(packageContext, CrimeActivity.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeId);
+        return intent;
     }
 
 }
