@@ -111,7 +111,6 @@ public class CrimeFragment extends Fragment {
 
         updateDate();
 
-
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -166,8 +165,7 @@ public class CrimeFragment extends Fragment {
 
     private boolean isTablet() {
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        Log.d("CrimeFragment", "screenSize" + screenSize);
-        return (screenSize >= Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return screenSize >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
 }
