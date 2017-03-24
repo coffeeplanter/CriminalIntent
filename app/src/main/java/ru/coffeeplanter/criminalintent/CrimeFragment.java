@@ -3,6 +3,7 @@ package ru.coffeeplanter.criminalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,7 +27,7 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
-    private static final String DIALOG_DATE = "DialogDate";
+    static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
 
     private static final int REQUEST_DATE = 0;
@@ -80,19 +81,24 @@ public class CrimeFragment extends Fragment {
         });
 
         mDateButton = (Button) v.findViewById(R.id.crime_date);
-        updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                dialog.show(manager, DIALOG_DATE);
+                if (isTablet()) {
+                    FragmentManager manager = getFragmentManager();
+                    DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                    dialog.show(manager, DIALOG_DATE);
+                }
+                else {
+                    Intent intent = new Intent(getActivity(), DatePickerActivity.class);
+                    intent.putExtra(DIALOG_DATE, mCrime.getDate());
+                    startActivityForResult(intent, REQUEST_DATE);
+                }
             }
         });
 
         mTimeButton = (Button) v.findViewById(R.id.crime_time);
-        updateTime();
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +108,8 @@ public class CrimeFragment extends Fragment {
                 dialog.show(manager, DIALOG_TIME);
             }
         });
+
+        updateDate();
 
 
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
@@ -124,31 +132,42 @@ public class CrimeFragment extends Fragment {
             return;
         }
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
-            updateDate();
-        }
-        if (requestCode == REQUEST_TIME) {
-            int hours = data.getIntExtra(TimePickerFragment.EXTRA_HOURS, 0);
-            Log.d("result", "" + hours);
-            int minutes = data.getIntExtra(TimePickerFragment.EXTRA_MINUTES, 0);
-            Log.d("result", "" + minutes);
             Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mCrime.getDate());
+            int hours = calendar.get(Calendar.HOUR_OF_DAY);
+            int minutes = calendar.get(Calendar.MINUTE);
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            calendar.setTime(date);
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             calendar.set(year, month, day, hours, minutes);
             mCrime.setDate(calendar.getTime());
-            updateTime();
+            updateDate();
+        }
+        if (requestCode == REQUEST_TIME) {
+            int hours = data.getIntExtra(TimePickerFragment.EXTRA_HOURS, 0);
+            int minutes = data.getIntExtra(TimePickerFragment.EXTRA_MINUTES, 0);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mCrime.getDate());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            calendar.set(year, month, day, hours, minutes);
+            mCrime.setDate(calendar.getTime());
+            updateDate();
         }
     }
 
     private void updateDate() {
         mDateButton.setText(DateFormat.format("EEEE, dd MMMM yyyy", mCrime.getDate()));
+        mTimeButton.setText(DateFormat.format("HH:mm:ss, zzzz", mCrime.getDate()));
     }
 
-    private void updateTime() {
-        mTimeButton.setText(DateFormat.format("HH:mm:ss, zzzz", mCrime.getDate()));
+    private boolean isTablet() {
+        int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        Log.d("CrimeFragment", "screenSize" + screenSize);
+        return (screenSize >= Configuration.SCREENLAYOUT_SIZE_LARGE);
     }
 
 }

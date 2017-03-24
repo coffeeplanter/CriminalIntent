@@ -64,18 +64,17 @@ public class TimePickerFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int newHours;
-                        int newMinutes;
+                        int hours;
+                        int minutes;
                         if (Build.VERSION.SDK_INT >= 23 ) {
-                            newHours = mTimePicker.getHour();
-                            newMinutes = mTimePicker.getMinute();
+                            hours = mTimePicker.getHour();
+                            minutes = mTimePicker.getMinute();
                         }
                         else {
-                            newHours = mTimePicker.getCurrentHour();
-                            newMinutes = mTimePicker.getCurrentMinute();
+                            hours = mTimePicker.getCurrentHour();
+                            minutes = mTimePicker.getCurrentMinute();
                         }
-
-                        sendResult(Activity.RESULT_OK, newHours, newMinutes);
+                        sendResult(Activity.RESULT_OK, hours, minutes);
                     }
                 })
                 .create();
