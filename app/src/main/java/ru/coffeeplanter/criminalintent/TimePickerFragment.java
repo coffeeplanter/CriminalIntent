@@ -49,7 +49,7 @@ public class TimePickerFragment extends DialogFragment {
 
         mTimePicker = (TimePicker) v.findViewById(R.id.dialog_time_time_picker);
         mTimePicker.setIs24HourView(true);
-        if (Build.VERSION.SDK_INT >= 23 ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
             mTimePicker.setHour(hours);
             mTimePicker.setMinute(minutes);
         }
@@ -66,7 +66,7 @@ public class TimePickerFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         int hours;
                         int minutes;
-                        if (Build.VERSION.SDK_INT >= 23 ) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
                             hours = mTimePicker.getHour();
                             minutes = mTimePicker.getMinute();
                         }
