@@ -19,6 +19,7 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private List<Crime> mCrimes;
+    private boolean mSubtitleVisible;
 
     public static Intent newIntent(Context packageContext, UUID crimeId) {
         Intent intent = new Intent(packageContext, CrimePagerActivity.class);
@@ -30,6 +31,9 @@ public class CrimePagerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime_pager);
+
+        boolean s = getIntent().getBooleanExtra(CrimeListFragment.SAVED_SUBTITLE_VISIBLE, false);
+        mSubtitleVisible = s;
 
         UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
 
@@ -56,6 +60,17 @@ public class CrimePagerActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    @Nullable
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        Intent intent = super.getSupportParentActivityIntent();
+        if (intent == null) {
+            intent = new Intent(this, CrimeListActivity.class);
+        }
+        intent.putExtra(CrimeListFragment.SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+        return intent;
     }
 
 }

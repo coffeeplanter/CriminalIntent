@@ -1,15 +1,10 @@
 package ru.coffeeplanter.criminalintent;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +22,7 @@ public class DatePickerFragment extends DialogFragment {
     private static final String ARG_DATE = "date";
 
     private DatePicker mDatePicker;
+    private Button mOkButton;
 
     public static DatePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
@@ -56,8 +52,8 @@ public class DatePickerFragment extends DialogFragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         mDatePicker.init(year, month, day, null);
 
-        Button okButton = (Button) v.findViewById(R.id.dialog_date_ok_button);
-        okButton.setOnClickListener(new View.OnClickListener() {
+        mOkButton = (Button) v.findViewById(R.id.dialog_date_ok_button);
+        mOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int year = mDatePicker.getYear();
