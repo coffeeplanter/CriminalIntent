@@ -146,7 +146,7 @@ public class CrimeFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_remove_crime:
                 isRemoving = true;
-                CrimeLab.get(getActivity()).removeCrime(mCrime.getId());
+                CrimeLab.get(getActivity()).removeCrime(mCrime);
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_IS_REMOVING, isRemoving);
                 getActivity().setResult(Activity.RESULT_OK, intent);
