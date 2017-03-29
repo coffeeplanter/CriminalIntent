@@ -183,6 +183,7 @@ public class CrimeFragment extends Fragment {
         mSuspectCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Запрашиваем номер телефона подозреваемого
                 Cursor c = getActivity().getContentResolver().query(
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                         new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
@@ -196,8 +197,7 @@ public class CrimeFragment extends Fragment {
                     }
                     c.moveToFirst();
                     String number = c.getString(0);
-                    Log.d("CrimeFragment", "Number is: " + number);
-
+                    // Набираем номер
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + number));
                     startActivity(intent);
