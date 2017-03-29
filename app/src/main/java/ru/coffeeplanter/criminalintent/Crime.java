@@ -65,4 +65,8 @@ public class Crime {
         mSuspectContactId = suspectContactId;
     }
 
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
+
 }
