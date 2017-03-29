@@ -12,6 +12,7 @@ public class CrimeDbSchema {
             public static final String DATE = "date";
             public static final String SOLVED = "solved";
             public static final String SUSPECT = "suspect";
+            public static final String SUSPECT_CONTACT_ID = "suspect_contact_id";
         }
 
     }

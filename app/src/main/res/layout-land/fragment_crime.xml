@@ -90,7 +90,15 @@
             android:layout_weight="1"
             android:text="@string/crime_report_text"/>
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/crime_suspect_call"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/call_the_suspect"/>
 
+    </LinearLayout>
 
 </LinearLayout>
