@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
@@ -26,12 +26,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Calendar;
@@ -43,6 +45,7 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
     public static final String DIALOG_DATE = "dialog_date";
     private static final String DIALOG_TIME = "dialog_time";
+    private static final String DIALOG_IMAGE = "dialog_image";
     public static final String EXTRA_IS_REMOVING = "ru.coffeeplanter.criminalintent.is_removing";
 
     private static final int REQUEST_DATE = 0;
@@ -78,6 +81,7 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+        Log.d("CrimeFragment", mPhotoFile.toString());
         setHasOptionsMenu(true);
     }
 
@@ -194,26 +198,30 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Запрашиваем номер телефона подозреваемого
-                Cursor c = getActivity().getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        new String[]{mCrime.getSuspectContactId()},
-                        null
-                );
-                try {
-                    if ((c == null) || (c.getCount() == 0)) {
-                        return;
+                if (mCrime.getSuspectContactId() != null) {
+                    Cursor c = getActivity().getContentResolver().query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{mCrime.getSuspectContactId()},
+                            null
+                    );
+                    try {
+                        if ((c == null) || (c.getCount() == 0)) {
+                            return;
+                        }
+                        c.moveToFirst();
+                        String number = c.getString(0);
+                        // Набираем номер
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + number));
+                        startActivity(intent);
+                    } finally {
+                        assert c != null;
+                        c.close();
                     }
-                    c.moveToFirst();
-                    String number = c.getString(0);
-                    // Набираем номер
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + number));
-                    startActivity(intent);
-                } finally {
-                    assert c != null;
-                    c.close();
+                } else {
+                    Toast.makeText(getActivity(), R.string.suspect_is_not_chosen, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -234,7 +242,23 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoView = (ImageView) v.findViewById(R.id.crime_photo);
-        updatePhotoView();
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DialogFragment dialog = PhotoViewFragment.newInstance(mPhotoFile);
+                dialog.show(manager, DIALOG_IMAGE);
+            }
+        });
+
+        ViewTreeObserver observer = mPhotoView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                updatePhotoView(mPhotoView.getWidth(), mPhotoView.getHeight());
+                mPhotoView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         return v;
 
@@ -314,7 +338,7 @@ public class CrimeFragment extends Fragment {
                 c.close();
             }
         } else if (requestCode == REQUEST_PHOTO) {
-            updatePhotoView();
+            updatePhotoView(mPhotoView.getWidth(), mPhotoView.getHeight());
         }
     }
 
@@ -347,11 +371,11 @@ public class CrimeFragment extends Fragment {
         return report;
     }
 
-    private void updatePhotoView() {
+    private void updatePhotoView(int width, int height) {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageBitmap(null);
         } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
+            Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), width, height);
             mPhotoView.setImageBitmap(bitmap);
         }
     }
