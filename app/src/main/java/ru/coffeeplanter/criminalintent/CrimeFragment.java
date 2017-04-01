@@ -305,14 +305,12 @@ public class CrimeFragment extends Fragment {
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 if (getActivity().findViewById(R.id.detail_fragment_container) == null) {
                     getActivity().finish();
-                }
-                updateCrime();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .remove(this)
-                        .commit();
-//                getActivity().getSupportFragmentManager().popBackStackImmediate();
-
-                if (getActivity().findViewById(R.id.detail_fragment_container) != null) {
+                } else {
+                    updateCrime();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .remove(this)
+                            .commit();
+//                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                     final CrimeListFragment listFragment = (CrimeListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                     listFragment.mCrimeRecyclerView.scrollToPosition(0);
                     listFragment.mCrimeRecyclerView.postDelayed(new Runnable() {
@@ -322,7 +320,6 @@ public class CrimeFragment extends Fragment {
                         }
                     }, 50);
                 }
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -27,4 +27,5 @@ public class DatePickerActivity extends SingleFragmentActivity {
             actionBar.setTitle(R.string.date_picker_title);
         }
     }
+
 }
