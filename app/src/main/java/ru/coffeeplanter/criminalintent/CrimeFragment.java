@@ -20,7 +20,6 @@ import android.support.v4.app.ShareCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -126,13 +125,11 @@ public class CrimeFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Здесь намеренно оставлено пустое место.
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
                 updateCrime();
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 // И здесь тоже.
@@ -315,14 +312,16 @@ public class CrimeFragment extends Fragment {
                         .commit();
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
 
-                final CrimeListFragment listFragment = (CrimeListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                listFragment.mCrimeRecyclerView.scrollToPosition(0);
-                listFragment.mCrimeRecyclerView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        listFragment.mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
-                    }
-                }, 50);
+                if (getActivity().findViewById(R.id.detail_fragment_container) != null) {
+                    final CrimeListFragment listFragment = (CrimeListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    listFragment.mCrimeRecyclerView.scrollToPosition(0);
+                    listFragment.mCrimeRecyclerView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            listFragment.mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
+                        }
+                    }, 50);
+                }
 
                 return true;
             default:
@@ -405,7 +404,6 @@ public class CrimeFragment extends Fragment {
     void updateCheckBox(Crime crime) {
         if ((mCrime != null) && (crime.getId().equals(mCrime.getId()))) {
             mSolvedCheckBox.setChecked(mCrime.isSolved());
-            Log.d("CrimeFragment", "CheckBox updated");
         }
     }
 

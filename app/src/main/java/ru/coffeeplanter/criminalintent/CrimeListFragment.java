@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,7 +112,7 @@ public class CrimeListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
-        if (mAdapter.mCrimes.size() > 0) {
+        if ((getActivity().findViewById(R.id.detail_fragment_container) != null) && (mAdapter.mCrimes.size() > 0)) {
             mCrimeRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -207,7 +205,8 @@ public class CrimeListFragment extends Fragment {
 
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    private class CrimeHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -244,8 +243,11 @@ public class CrimeListFragment extends Fragment {
             mLastClickedPosition = getAdapterPosition();
             mCrime.setSolved(isChecked);
             CrimeLab.get(getActivity()).updateCrime(mCrime);
-            mCallbacks.onCrimeSelected(mCrime);
+            if (getActivity().findViewById(R.id.detail_fragment_container) != null) {
+                mCallbacks.onCrimeSelected(mCrime);
+            }
         }
+
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {

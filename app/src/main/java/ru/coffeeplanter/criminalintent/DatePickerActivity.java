@@ -1,7 +1,10 @@
 package ru.coffeeplanter.criminalintent;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.Date;
 
@@ -16,4 +19,12 @@ public class DatePickerActivity extends SingleFragmentActivity {
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.date_picker_title);
+        }
+    }
 }
