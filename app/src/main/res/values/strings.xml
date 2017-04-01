@@ -23,6 +23,7 @@
     <string name="send_report">Send crime report via</string>
     <string name="call_the_suspect">Call the suspect</string>
     <string name="suspect_is_not_chosen">A suspect is not chosen</string>
+    <string name="make_photo_toast">Make the photo first</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d crime</item>

@@ -1,14 +1,17 @@
 package ru.coffeeplanter.criminalintent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,16 +28,31 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
 
-    public static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
-    private static final int START_CRIME_DETAILS = 0;
+    static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+    static final int START_CRIME_DETAILS = 0;
 
     private int mLastClickedPosition = RecyclerView.NO_POSITION;
 
-    private RecyclerView mCrimeRecyclerView;
+    RecyclerView mCrimeRecyclerView;
     private LinearLayout mEmptyView;
     private Button mAddCrime;
-    private CrimeAdapter mAdapter;
-    private boolean mSubtitleVisible;
+    public CrimeAdapter mAdapter;
+    boolean mSubtitleVisible;
+    private Callbacks mCallbacks;
+
+    /**
+     *
+     * Обязательный интерфейс для активности-хоста
+     */
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +84,7 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
-    private void updateUI() {
+    public void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
         if (mAdapter == null) {
@@ -95,12 +114,26 @@ public class CrimeListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
+        if (mAdapter.mCrimes.size() > 0) {
+            mCrimeRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
+                }
+            }, 50);
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
     }
 
     @Override
@@ -138,9 +171,12 @@ public class CrimeListFragment extends Fragment {
     private void startNewCrime() {
         Crime crime = new Crime();
         CrimeLab.get(getActivity()).addCrime(crime);
-        Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-        intent.putExtra(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
-        startActivityForResult(intent, START_CRIME_DETAILS);
+//        Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+//        intent.putExtra(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+//        startActivityForResult(intent, START_CRIME_DETAILS);
+        mCallbacks.onCrimeSelected(crime);
+        mLastClickedPosition = RecyclerView.NO_POSITION;
+        updateUI();
     }
 
     @Override
@@ -171,7 +207,7 @@ public class CrimeListFragment extends Fragment {
 
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -184,6 +220,7 @@ public class CrimeListFragment extends Fragment {
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
             mDateTextView = (TextView) itemView.findViewById(R.id.list_item_crime_date_text_view);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
+            mSolvedCheckBox.setOnCheckedChangeListener(this);
         }
 
         public void bindCrime(Crime crime) {
@@ -196,16 +233,24 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             mLastClickedPosition = getAdapterPosition();
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            intent.putExtra(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
-            startActivityForResult(intent, START_CRIME_DETAILS);
+//            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
+//            intent.putExtra(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+//            startActivityForResult(intent, START_CRIME_DETAILS);
+            mCallbacks.onCrimeSelected(mCrime);
         }
 
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mLastClickedPosition = getAdapterPosition();
+            mCrime.setSolved(isChecked);
+            CrimeLab.get(getActivity()).updateCrime(mCrime);
+            mCallbacks.onCrimeSelected(mCrime);
+        }
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
 
-        private List<Crime> mCrimes;
+        public List<Crime> mCrimes;
 
         public CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
