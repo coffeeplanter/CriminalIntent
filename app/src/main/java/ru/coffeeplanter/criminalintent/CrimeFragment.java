@@ -56,6 +56,7 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
     private File mPhotoFile;
     private EditText mTitleField;
+    private CheckBox mNeedPoliceCheckBox;
     private Button mDateButton;
     private Button mTimeButton;
     CheckBox mSolvedCheckBox;
@@ -133,6 +134,16 @@ public class CrimeFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 // И здесь тоже.
+            }
+        });
+
+        mNeedPoliceCheckBox = (CheckBox) v.findViewById(R.id.requires_police_check_box);
+        mNeedPoliceCheckBox.setChecked(mCrime.isRequiresPolice());
+        mNeedPoliceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mCrime.setRequiresPolice(isChecked);
+                updateCrime();
             }
         });
 
@@ -312,13 +323,15 @@ public class CrimeFragment extends Fragment {
                             .commit();
 //                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                     final CrimeListFragment listFragment = (CrimeListFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                    listFragment.mCrimeRecyclerView.scrollToPosition(0);
-                    listFragment.mCrimeRecyclerView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            listFragment.mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
-                        }
-                    }, 50);
+                    if (listFragment.mAdapter.mCrimes.size() > 0) {
+                        listFragment.mCrimeRecyclerView.scrollToPosition(0);
+                        listFragment.mCrimeRecyclerView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                listFragment.mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
+                            }
+                        }, 50);
+                    }
                 }
                 return true;
             default:

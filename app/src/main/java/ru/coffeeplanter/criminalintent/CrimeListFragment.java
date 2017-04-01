@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -91,7 +92,10 @@ public class CrimeListFragment extends Fragment {
         }
         else if (mLastClickedPosition != RecyclerView.NO_POSITION) {
             mAdapter.setCrimes(crimes);
-            mAdapter.notifyItemChanged(mLastClickedPosition);
+            // Отключил, т. к. были проблемы с обновлением при удалении преступления,
+            // Возможно, нужно заменить на колбэк при удалении преступления в CrimeFragment
+//            mAdapter.notifyItemChanged(mLastClickedPosition);
+            mAdapter.notifyDataSetChanged();
         }
         else {
             mAdapter.setCrimes(crimes);
@@ -136,10 +140,8 @@ public class CrimeListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
-
         MenuItem subtitleItem = menu.findItem(R.id.menu_item_show_subtitle);
         if (mSubtitleVisible) {
             subtitleItem.setTitle(R.string.hide_subtitle);
@@ -147,7 +149,6 @@ public class CrimeListFragment extends Fragment {
         else {
             subtitleItem.setTitle(R.string.show_subtitle);
         }
-
     }
 
     @Override
@@ -208,13 +209,22 @@ public class CrimeListFragment extends Fragment {
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-        private TextView mTitleTextView;
-        private TextView mDateTextView;
-        private CheckBox mSolvedCheckBox;
-        private Crime mCrime;
+        protected TextView mTitleTextView;
+        protected TextView mDateTextView;
+        protected CheckBox mSolvedCheckBox;
+        protected Crime mCrime;
 
-        public CrimeHolder(View itemView) {
-            super(itemView);
+//        public CrimeHolder(View itemView) {
+//            super(itemView);
+//            this.itemView.setOnClickListener(this);
+//            mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
+//            mDateTextView = (TextView) itemView.findViewById(R.id.list_item_crime_date_text_view);
+//            mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
+//            mSolvedCheckBox.setOnCheckedChangeListener(this);
+//        }
+
+        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, int resId) {
+            super(inflater.inflate(resId, parent, false));
             itemView.setOnClickListener(this);
             mTitleTextView = (TextView) itemView.findViewById(R.id.list_item_crime_title_text_view);
             mDateTextView = (TextView) itemView.findViewById(R.id.list_item_crime_date_text_view);
@@ -250,7 +260,16 @@ public class CrimeListFragment extends Fragment {
 
     }
 
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+    private class CrimePoliceHolder extends CrimeHolder {
+        public CrimePoliceHolder(LayoutInflater inflater, ViewGroup parent, int resId) {
+            super(inflater, parent, resId);
+        }
+    }
+
+    class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private final int CRIME_VIEW_TYPE = 1;
+        private final int CRIME_POLICE_VIEW_TYPE = 2;
 
         public List<Crime> mCrimes;
 
@@ -259,16 +278,28 @@ public class CrimeListFragment extends Fragment {
         }
 
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
-            return new CrimeHolder(view);
+        public int getItemViewType(int position) {
+            Log.d("CrimeListFragment", "CrimeAdapter " + mCrimes.get(position).isRequiresPolice());
+            return !mCrimes.get(position).isRequiresPolice() ? CRIME_VIEW_TYPE : CRIME_POLICE_VIEW_TYPE;
         }
 
         @Override
-        public void onBindViewHolder(CrimeHolder holder, int position) {
+        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            switch (viewType) {
+                case CRIME_VIEW_TYPE:
+                    return new CrimeHolder(layoutInflater, parent, R.layout.list_item_crime);
+                case CRIME_POLICE_VIEW_TYPE:
+                    return new CrimePoliceHolder(layoutInflater, parent, R.layout.list_item_crime_police);
+                default:
+                    return new CrimeHolder(layoutInflater, parent, R.layout.list_item_crime);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            holder.bindCrime(crime);
+            ((CrimeHolder) holder).bindCrime(crime);
         }
 
         @Override

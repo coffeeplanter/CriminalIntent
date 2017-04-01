@@ -50,6 +50,13 @@
             android:layout_marginRight="16dp"
             android:hint="@string/crime_title_hint"/>
 
+        <CheckBox
+            android:id="@+id/requires_police_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/call_police_label"/>
+
     </LinearLayout>
 
 </LinearLayout>
