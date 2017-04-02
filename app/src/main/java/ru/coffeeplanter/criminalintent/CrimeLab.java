@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import ru.coffeeplanter.criminalintent.database.CrimeBaseHelper;
 import ru.coffeeplanter.criminalintent.database.CrimeCursorWrapper;
-import ru.coffeeplanter.criminalintent.database.CrimeDbSchema;
 import ru.coffeeplanter.criminalintent.database.CrimeDbSchema.CrimeTable;
 
 public class CrimeLab {

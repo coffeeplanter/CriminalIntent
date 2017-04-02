@@ -12,5 +12,8 @@ I would strongly recommend this book for those who want learn Android developmen
 
 Это учебное приложение из книги "Android. Программирование для профессионалов." Б. Харди, Ф. Филлипса, К. Стюарта, К. Марсикано.
  
- Горячо рекомендую эту книгу всем, кто хочет серьёзно подойти к процессу изучения разработки под Android.
+Горячо рекомендую эту книгу всем, кто хочет серьёзно подойти к процессу изучения разработки под Android.
  
+### Screenshot / Скриншот
+
+![Screenshot](/screenshot.png?raw=true "Screenshot")
