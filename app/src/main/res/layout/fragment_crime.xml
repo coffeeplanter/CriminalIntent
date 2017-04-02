@@ -15,7 +15,24 @@
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
             android:text="@string/crime_details_label"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/crime_date"
+            android:padding="4dp"
+            android:text="@string/date_picker_label"/>
 
         <Button
             android:id="@+id/crime_date"
@@ -23,6 +40,18 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:labelFor="@+id/crime_time"
+            android:padding="4dp"
+            android:text="@string/time_picker_label"/>
 
         <Button
             android:id="@+id/crime_time"
@@ -41,6 +70,17 @@
             android:layout_marginTop="16dp"
             android:text="@string/crime_solved_label"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:labelFor="@+id/crime_suspect"
+            android:padding="4dp"
+            android:text="@string/crime_suspect_text"/>
+
         <Button
             android:id="@+id/crime_suspect"
             android:layout_width="match_parent"
@@ -50,6 +90,17 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:text="@string/crime_suspect_text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:padding="4dp"
+            android:text="@string/crime_actions_label"/>
 
         <Button
             android:id="@+id/crime_report"

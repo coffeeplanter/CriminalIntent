@@ -4,16 +4,23 @@
     <string name="crime_title_hint">Enter a title for the crime</string>
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
+    <string name="crime_photo_button_description">Take photo of crime scene</string>
+    <string name="crime_photo_no_image_description">Crime scene photo (not set)</string>
+    <string name="crime_photo_image_description">Crime scene photo (set)</string>
     <string name="crime_solved_label">Solved?</string>
     <string name="date_picker_title">Date of crime:</string>
+    <string name="date_picker_label">Choose date of crime</string>
     <string name="time_picker_title">Time of crime:</string>
+    <string name="time_picker_label">Choose time of crime</string>
+    <string name="crime_actions_label">Choose actions</string>
+    <string name="crime_suspect_and_actions_label">Choose suspect and actions</string>
     <string name="new_crime">New Crime</string>
     <string name="show_subtitle">Show Subtitle</string>
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle_format">%1$d crimes</string>
     <string name="remove_crime">Remove Crime</string>
-    <string name="no_crimes">There are no crimes.</string>
-    <string name="crime_suspect_text">Choose Suspect</string>
+    <string name="no_crimes">There are no crimes</string>
+    <string name="crime_suspect_text">Choose suspect</string>
     <string name="crime_report_text">Send Crime Report</string>
     <string name="crime_report">%1$s! The crime was discovered on %2$s. %3$s, and %4$s</string>
     <string name="crime_report_solved">The case is solved</string>
@@ -24,9 +31,10 @@
     <string name="send_report">Send crime report via</string>
     <string name="call_the_suspect">Call the suspect</string>
     <string name="suspect_is_not_chosen">A suspect is not chosen</string>
-    <string name="make_photo_toast">Make the photo first</string>
+    <string name="make_photo_toast">Please, make the photo first</string>
     <string name="call_police_label">Need police!</string>
     <string name="item_deleted_toast">Crime deleted</string>
+    <string name="photo_saved_announcement">The new photo of the crime is saved</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d crime</item>

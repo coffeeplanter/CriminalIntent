@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -231,6 +232,7 @@ public class CrimeListFragment extends Fragment {
         protected CheckBox mSolvedCheckBox;
         protected Crime mCrime;
         protected Drawable backgroundBuffer;
+        protected ConstraintLayout mConstraintLayout;
 
 //        public CrimeHolder(View itemView) {
 //            super(itemView);
@@ -248,6 +250,7 @@ public class CrimeListFragment extends Fragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.list_item_crime_date_text_view);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_crime_solved_check_box);
             mSolvedCheckBox.setOnCheckedChangeListener(this);
+            mConstraintLayout = (ConstraintLayout) itemView.findViewById(R.id.crime_item_container);
         }
 
         public void bindCrime(Crime crime) {
@@ -260,6 +263,11 @@ public class CrimeListFragment extends Fragment {
             String dateString = DateFormat.format(dateFormat, mCrime.getDate()).toString();
             mDateTextView.setText(dateString);
             mSolvedCheckBox.setChecked(mCrime.isSolved());
+            dateFormat = "EEEE, MMMM d, yyyy, h:mm a";
+            if (LocaleUtils.getCurrentLanguage(getActivity()).equals("ru")) {
+                dateFormat = "EEEE, dd MMMM yyyy, HH:mm";
+            }
+            mConstraintLayout.setContentDescription(mCrime.getTitle() + DateFormat.format(dateFormat, mCrime.getDate()).toString());
         }
 
         @Override

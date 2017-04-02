@@ -20,6 +20,7 @@ import android.support.v4.app.ShareCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -277,6 +278,7 @@ public class CrimeFragment extends Fragment {
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("CrimeFragment", "getDrawable: " + mPhotoView.getDrawable());
                 if ((mPhotoFile == null) || (!mPhotoFile.exists())) {
                     Toast.makeText(getActivity(), R.string.make_photo_toast, Toast.LENGTH_SHORT).show();
                 } else {
@@ -397,6 +399,12 @@ public class CrimeFragment extends Fragment {
         } else if (requestCode == REQUEST_PHOTO) {
             updateCrime();
             updatePhotoView(mPhotoView.getWidth(), mPhotoView.getHeight());
+            mPhotoView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPhotoView.announceForAccessibility(getString(R.string.photo_saved_announcement));
+                }
+            }, 50);
         }
     }
 
@@ -455,10 +463,16 @@ public class CrimeFragment extends Fragment {
 
     private void updatePhotoView(int width, int height) {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
-            mPhotoView.setImageBitmap(null);
+            Log.d("CrimeFragment", "Set image is null " + mPhotoFile.toString() + " : " + mPhotoFile.exists());
+            mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_no_image_description));
         } else {
+            Log.d("CrimeFragment", "Set image is not null " + mPhotoFile.toString() + " : " + mPhotoFile.exists());
+            Log.d("CrimeFragment", "width: " + width + ", height: " + height);
             Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), width, height);
             mPhotoView.setImageBitmap(bitmap);
+            Log.d("CrimeFragment", "getDrawable: " + mPhotoView.getDrawable());
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_image_description));
         }
     }
 

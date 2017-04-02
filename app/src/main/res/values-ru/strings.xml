@@ -4,6 +4,9 @@
     <string name="crime_title_hint">Введите описание проступка</string>
     <string name="crime_title_label">Проступок</string>
     <string name="crime_details_label">Подробности</string>
+    <string name="crime_photo_button_description">Сделать снимок прступка</string>
+    <string name="crime_photo_no_image_description">Снимок проступка (отсутствует)</string>
+    <string name="crime_photo_image_description">Снимок проступка (присутствует)</string>
     <string name="crime_solved_label">Вопрос решён?</string>
     <string name="date_picker_title">Дата проступка:</string>
     <string name="time_picker_title">Время проступка:</string>
@@ -12,7 +15,7 @@
     <string name="hide_subtitle">Скрыть подзаголовок</string>
     <string name="subtitle_format">%1$d преступлений</string>
     <string name="remove_crime">Удалить проступок</string>
-    <string name="no_crimes">Список проступков пуст.</string>
+    <string name="no_crimes">Список проступков пуст</string>
     <string name="crime_suspect_text">Выбрать подозреваемого</string>
     <string name="crime_report_text">Отправить отчёт</string>
     <string name="crime_report">%1$s! Дата обнаружения проступка: %2$s. %3$s, и %4$s</string>
@@ -27,11 +30,16 @@
     <string name="make_photo_toast">Сначала сделайте снимок</string>
     <string name="call_police_label">Нужна полиция!</string>
     <string name="item_deleted_toast">Проступок удалён</string>
+    <string name="photo_saved_announcement">Новый снимок проступка сохранён</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d проступок</item>
         <item quantity="few">%1$d проступка</item>
         <item quantity="many">%1$d проступков</item>
     </plurals>
+    <string name="crime_actions_label">Выбор действий</string>
+    <string name="crime_suspect_and_actions_label">Выбор подозреваемого и действий</string>
+    <string name="date_picker_label">Выбор даты</string>
+    <string name="time_picker_label">Выбор времени</string>
 
 </resources>

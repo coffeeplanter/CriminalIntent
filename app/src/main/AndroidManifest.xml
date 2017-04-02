@@ -3,9 +3,7 @@
           package="ru.coffeeplanter.criminalintent">
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature
         android:name="android.hardware.camera"
