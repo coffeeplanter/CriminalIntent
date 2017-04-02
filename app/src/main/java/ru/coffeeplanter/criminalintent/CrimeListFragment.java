@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -253,7 +253,12 @@ public class CrimeListFragment extends Fragment {
         public void bindCrime(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            String dateFormat = "EEE, MMMM d, yyyy, h:mm:ss a, zzzz";
+            if (LocaleUtils.getCurrentLanguage(getActivity()).equals("ru")) {
+                dateFormat = "EEE, dd.MM.yyyy, HH:mm:ss, zzzz";
+            }
+            String dateString = DateFormat.format(dateFormat, mCrime.getDate()).toString();
+            mDateTextView.setText(dateString);
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
 
@@ -312,7 +317,7 @@ public class CrimeListFragment extends Fragment {
             mCrimes.remove(position);
             notifyItemRemoved(position);
             Toast.makeText(getActivity(), R.string.item_deleted_toast, Toast.LENGTH_SHORT).show();
-            if (mAdapter.mCrimes.size() > 0) {
+            if ((getActivity().findViewById(R.id.detail_fragment_container) != null) && (mAdapter.mCrimes.size() > 0)) {
                 mCrimeRecyclerView.scrollToPosition(0);
                 mCrimeRecyclerView.postDelayed(new Runnable() {
                     @Override

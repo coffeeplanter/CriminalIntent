@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CriminalIntent</string>
+    <string name="crime_title_hint">Введите описание проступка</string>
+    <string name="crime_title_label">Проступок</string>
+    <string name="crime_details_label">Подробности</string>
+    <string name="crime_solved_label">Вопрос решён?</string>
+    <string name="date_picker_title">Дата проступка:</string>
+    <string name="time_picker_title">Время проступка:</string>
+    <string name="new_crime">Новый проступок</string>
+    <string name="show_subtitle">Показать подзаголовок</string>
+    <string name="hide_subtitle">Скрыть подзаголовок</string>
+    <string name="subtitle_format">%1$d преступлений</string>
+    <string name="remove_crime">Удалить проступок</string>
+    <string name="no_crimes">Список проступков пуст.</string>
+    <string name="crime_suspect_text">Выбрать подозреваемого</string>
+    <string name="crime_report_text">Отправить отчёт</string>
+    <string name="crime_report">%1$s! Дата обнаружения проступка: %2$s. %3$s, и %4$s</string>
+    <string name="crime_report_solved">Вопрос был решён</string>
+    <string name="crime_report_unsolved">Вопрос не решён</string>
+    <string name="crime_report_no_suspect">подозреваемый не определён.</string>
+    <string name="crime_report_suspect">подозреваемый: %s.</string>
+    <string name="crime_report_subject">Отчёт о проступке от CriminalIntent</string>
+    <string name="send_report">Отправить отчёт с помощью</string>
+    <string name="call_the_suspect">Позвонить подозреваемому</string>
+    <string name="suspect_is_not_chosen">Подозреваемый не выбран</string>
+    <string name="make_photo_toast">Сначала сделайте снимок</string>
+    <string name="call_police_label">Нужна полиция!</string>
+    <string name="item_deleted_toast">Проступок удалён</string>
+
+    <plurals name="subtitle_plural">
+        <item quantity="one">%1$d проступок</item>
+        <item quantity="few">%1$d проступка</item>
+        <item quantity="many">%1$d проступков</item>
+    </plurals>
+
+</resources>

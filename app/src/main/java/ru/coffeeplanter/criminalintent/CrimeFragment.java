@@ -407,8 +407,17 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(DateFormat.format("EEEE, dd MMMM yyyy", mCrime.getDate()));
-        mTimeButton.setText(DateFormat.format("HH:mm:ss, zzzz", mCrime.getDate()));
+        String dateFormat;
+        String timeFormat;
+        if (LocaleUtils.getCurrentLanguage(getActivity()).equals("ru")) {
+            dateFormat = "EEEE, dd MMMM yyyy";
+            timeFormat = "HH:mm:ss, zzzz";
+        } else {
+            dateFormat = "EEEE, MMMM d, yyyy";
+            timeFormat = "h:mm:ss a, zzzz";
+        }
+        mDateButton.setText(DateFormat.format(dateFormat, mCrime.getDate()));
+        mTimeButton.setText(DateFormat.format(timeFormat, mCrime.getDate()));
     }
 
     void updateCheckBox(Crime crime) {
@@ -430,6 +439,9 @@ public class CrimeFragment extends Fragment {
             solvedString = getString(R.string.crime_report_unsolved);
         }
         String dateFormat = "EEE, MMM dd";
+        if (LocaleUtils.getCurrentLanguage(getActivity()).equals("ru")) {
+            dateFormat = "EEE, dd.MM.yyyy";
+        }
         String dateString = DateFormat.format(dateFormat, mCrime.getDate()).toString();
         String suspect = mCrime.getSuspect();
         if (suspect == null) {

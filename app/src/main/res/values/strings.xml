@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CriminalIntent</string>
-    <string name="crime_title_hint">Enter a title for the crime.</string>
+    <string name="crime_title_hint">Enter a title for the crime</string>
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
     <string name="crime_solved_label">Solved?</string>
@@ -25,7 +26,7 @@
     <string name="suspect_is_not_chosen">A suspect is not chosen</string>
     <string name="make_photo_toast">Make the photo first</string>
     <string name="call_police_label">Need police!</string>
-    <string name="item_deleted_toast">Item deleted</string>
+    <string name="item_deleted_toast">Crime deleted</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d crime</item>
