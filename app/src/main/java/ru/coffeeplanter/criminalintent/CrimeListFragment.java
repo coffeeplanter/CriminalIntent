@@ -3,6 +3,8 @@ package ru.coffeeplanter.criminalintent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,8 +25,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+
+import ru.coffeeplanter.criminalintent.helper.CrimeItemTouchHelperCallback;
+import ru.coffeeplanter.criminalintent.helper.ItemTouchHelperAdapter;
+import ru.coffeeplanter.criminalintent.helper.ItemTouchHelperViewHolder;
 
 public class CrimeListFragment extends Fragment {
 
@@ -38,6 +46,7 @@ public class CrimeListFragment extends Fragment {
     public CrimeAdapter mAdapter;
     boolean mSubtitleVisible;
     private Callbacks mCallbacks;
+    private ItemTouchHelper mItemTouchHelper;
 
     /**
      *
@@ -110,6 +119,14 @@ public class CrimeListFragment extends Fragment {
             mEmptyView.setVisibility(View.VISIBLE);
         }
         updateSubtitle();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ItemTouchHelper.Callback callback = new CrimeItemTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mCrimeRecyclerView);
     }
 
     @Override
@@ -207,12 +224,13 @@ public class CrimeListFragment extends Fragment {
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+            implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, ItemTouchHelperViewHolder {
 
         protected TextView mTitleTextView;
         protected TextView mDateTextView;
         protected CheckBox mSolvedCheckBox;
         protected Crime mCrime;
+        protected Drawable backgroundBuffer;
 
 //        public CrimeHolder(View itemView) {
 //            super(itemView);
@@ -258,6 +276,17 @@ public class CrimeListFragment extends Fragment {
             }
         }
 
+        @Override
+        public void onItemSelected() {
+            backgroundBuffer = itemView.getBackground();
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackground(backgroundBuffer);
+        }
+
     }
 
     private class CrimePoliceHolder extends CrimeHolder {
@@ -266,7 +295,7 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
 
         private final int CRIME_VIEW_TYPE = 1;
         private final int CRIME_POLICE_VIEW_TYPE = 2;
@@ -278,8 +307,24 @@ public class CrimeListFragment extends Fragment {
         }
 
         @Override
+        public void onItemDismiss(int position) {
+            CrimeLab.get(getActivity()).removeCrime(mCrimes.get(position));
+            mCrimes.remove(position);
+            notifyItemRemoved(position);
+            Toast.makeText(getActivity(), R.string.item_deleted_toast, Toast.LENGTH_SHORT).show();
+            if (mAdapter.mCrimes.size() > 0) {
+                mCrimeRecyclerView.scrollToPosition(0);
+                mCrimeRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCrimeRecyclerView.findViewHolderForAdapterPosition(0).itemView.performClick();
+                    }
+                }, 50);
+            }
+        }
+
+        @Override
         public int getItemViewType(int position) {
-            Log.d("CrimeListFragment", "CrimeAdapter " + mCrimes.get(position).isRequiresPolice());
             return !mCrimes.get(position).isRequiresPolice() ? CRIME_VIEW_TYPE : CRIME_POLICE_VIEW_TYPE;
         }
 

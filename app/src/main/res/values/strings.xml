@@ -25,6 +25,7 @@
     <string name="suspect_is_not_chosen">A suspect is not chosen</string>
     <string name="make_photo_toast">Make the photo first</string>
     <string name="call_police_label">Need police!</string>
+    <string name="item_deleted_toast">Item deleted</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$d crime</item>
